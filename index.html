@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoDueler — Вгадай Місце</title>
+  <meta name="description" content="Безкоштовний мультиплеєрний GeoDueler. Вгадуй локації по всьому світу!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <!-- Leaflet CSS (FREE map, no API key) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ LOADING ═══════════════ -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Завантаження...</div>
+</div>
+
+<!-- ═══════════════════════════════ TOAST ════════════════ -->
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     МЕНЮ
+════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-menu">
+  <div class="menu-inner">
+
+    <div style="text-align:center">
+      <div class="logo-sub">Explore the World</div>
+      <div class="logo-title">Geo<span>Dueler</span></div>
+      <div class="logo-desc">Вгадуй місця по фото. Грай з друзями.</div>
+      <div class="free-badge">✅ 100% безкоштовно · без карти · без реєстрації</div>
+    </div>
+
+    <div class="menu-cards">
+
+      <!-- Соло -->
+      <div class="menu-card">
+        <h3>🌍 Соло гра</h3>
+        <p>5 раундів — вгадуй де зроблено фото, клікай на карті.</p>
+        <div class="input-group" style="margin-bottom:14px">
+          <label class="input-label" for="player-name-input">Твоє ім'я</label>
+          <input class="input" id="player-name-input" type="text" placeholder="Мандрівник" maxlength="20">
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="startSoloGame()">
+          Грати соло →
+        </button>
+      </div>
+
+      <!-- Мультиплеєр -->
+      <div class="menu-card">
+        <h3>👥 Мультиплеєр</h3>
+        <p>Створи кімнату і поділись кодом з друзями. Хто ближче — переміг!</p>
+        <div class="input-group" style="margin-bottom:10px">
+          <label class="input-label" for="join-name-input">Твоє ім'я</label>
+          <input class="input" id="join-name-input" type="text" placeholder="Мандрівник" maxlength="20">
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="input-group">
+            <label class="input-label">Раундів</label>
+            <select class="input" id="rounds-select">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="7">7</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Час</label>
+            <select class="input" id="time-select">
+              <option value="60">60с</option>
+              <option value="90" selected>90с</option>
+              <option value="120">120с</option>
+              <option value="180">180с</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="createMultiplayerRoom()">
+          Створити кімнату
+        </button>
+      </div>
+
+      <!-- Приєднатись -->
+      <div class="menu-card">
+        <h3>🔑 Приєднатись</h3>
+        <p>Отримай 6-значний код від друга і приєднуйся до гри.</p>
+        <div class="input-group" style="margin-bottom:14px">
+          <label class="input-label">Код кімнати</label>
+          <input class="input" id="room-code-input" type="text"
+            placeholder="ABC123" maxlength="6"
+            style="letter-spacing:.2em;text-transform:uppercase"
+            oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <button class="btn btn-secondary btn-full" onclick="joinMultiplayerRoom()">
+          Приєднатись →
+        </button>
+      </div>
+
+      <!-- Лідерборд -->
+      <div class="menu-card">
+        <h3>🏆 Таблиця лідерів</h3>
+        <p>Найкращі результати гравців. Потрапи в топ!</p>
+        <div style="margin-bottom:16px;padding:10px;background:var(--bg2);border-radius:8px;border:1px solid var(--border)">
+          <div style="font-family:var(--ff2);font-size:.68rem;letter-spacing:.1em;color:var(--t3);text-transform:uppercase;margin-bottom:4px">Система очок</div>
+          <div style="font-family:var(--ff2);font-size:.82rem;color:var(--t2)">
+            ≤100м → 5000 pts &nbsp;|&nbsp; 100км → ~2800 pts<br>
+            500км → ~1200 pts &nbsp;|&nbsp; 2000км → ~330 pts
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-full" onclick="loadLeaderboardScreen()">
+          Переглянути →
+        </button>
+      </div>
+
+    </div>
+
+    <div style="color:var(--t3);font-family:var(--ff2);font-size:.68rem;text-align:center;line-height:1.8">
+      🗺 OpenStreetMap · 📸 Wikimedia Commons · 🗄 Supabase<br>
+      Мультиплеєр потребує <a href="https://supabase.com" target="_blank" style="color:var(--t2)">Supabase</a> (безкоштовно)
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ЛОБІ
+════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-lobby">
+  <div class="lobby-inner">
+
+    <div class="lobby-header">
+      <h2>Лобі</h2>
+      <button class="btn btn-danger btn-sm" onclick="backToMenu()">✕ Вийти</button>
+    </div>
+
+    <div class="code-display">
+      <div>
+        <div class="code-label">Код кімнати</div>
+        <div class="code-value" id="lobby-code">------</div>
+        <div class="lobby-round-info" id="lobby-round-info"></div>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="copy-code-btn">📋 Копіювати</button>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom:8px">Гравці</div>
+      <div id="lobby-players"></div>
+    </div>
+
+    <div id="waiting-msg">⏳ Чекаємо поки хост почне гру...</div>
+    <button class="btn btn-primary btn-lg" id="start-game-btn" onclick="hostStartGame()">
+      🚀 Почати гру!
+    </button>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ГРА
+════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-game">
+
+  <!-- Фото локації -->
+  <div id="location-image-container">
+    <img id="location-image" src="" alt="Локація" draggable="false">
+    <div id="image-loader">
+      <div class="image-loader-spinner"></div>
+      <div style="font-family:var(--ff2);font-size:.78rem;color:var(--t3)">Завантаження фото...</div>
+    </div>
+    <div id="location-hint-bar">
+      <span id="location-hint"></span>
+    </div>
+  </div>
+
+  <!-- HUD зверху -->
+  <div class="game-hud">
+    <div class="hud-chip">
+      <span class="hud-label">Раунд</span>
+      <span class="hud-value" id="round-counter">1 / 5</span>
+    </div>
+    <div class="hud-chip">
+      <span class="hud-label">⏱</span>
+      <span class="timer-display" id="timer-display">90</span>
+    </div>
+    <div class="hud-chip">
+      <span class="hud-label">Очки</span>
+      <span class="hud-value" id="total-score-display">0</span>
+    </div>
+  </div>
+
+  <!-- Міні карта -->
+  <div id="guess-map-container">
+    <button class="btn btn-secondary btn-sm" id="map-toggle-btn">🗺 Карта</button>
+    <span id="guess-count-display"></span>
+    <div id="guess-map-canvas"></div>
+    <div id="guess-map-footer">
+      <button class="btn btn-primary btn-sm" id="confirm-btn" onclick="confirmGuess()" disabled>
+        Підтвердити здогадку
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     РЕЗУЛЬТАТИ РАУНДУ
+════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-round-results">
+  <div class="results-layout">
+
+    <!-- Ліва колонка -->
+    <div class="results-left">
+      <div class="results-info">
+        <div class="result-header">
+          <h2>Результат раунду</h2>
+          <div class="result-location" id="result-location-name"></div>
+        </div>
+        <div class="result-stats">
+          <div class="stat-box">
+            <div class="stat-label">Відстань</div>
+            <div class="stat-value" id="result-distance">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">+Очки</div>
+            <div class="stat-value gold" id="result-score">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Всього</div>
+            <div class="stat-value green" id="result-total">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Відкрите фото -->
+      <div class="reveal-image-wrap">
+        <img id="reveal-image" src="" alt="" style="opacity:.85">
+      </div>
+
+      <!-- Таблиця гравців -->
+      <div class="results-sb">
+        <div class="section-label" style="margin-bottom:6px">Гравці</div>
+        <div id="round-scoreboard"></div>
+        <div style="margin-top:12px">
+          <button class="btn btn-primary btn-full btn-lg" id="next-round-btn">
+            Наступний раунд →
+          </button>
+        </div>
+        <div style="margin-top:8px">
+          <button class="btn btn-secondary btn-full btn-sm" onclick="backToMenu()">
+            ← Вийти в меню
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Права: карта результатів -->
+    <div id="results-map-canvas"></div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ФІНАЛ
+════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-final">
+  <div class="final-inner">
+    <div class="final-trophy">🏆</div>
+    <div class="final-title">Гра завершена!</div>
+    <div>
+      <div class="final-score-num" id="final-score">0</div>
+      <div class="final-score-label">загальних очок</div>
+      <div class="final-rank-badge" id="final-rank"></div>
+    </div>
+    <div class="divider" style="width:100%">Підсумки</div>
+    <div class="final-sb-section">
+      <div id="final-scoreboard"></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <button class="btn btn-primary btn-lg" onclick="startSoloGame()">🔄 Ще раз</button>
+      <button class="btn btn-secondary" onclick="loadLeaderboardScreen()">🏆 Лідерборд</button>
+      <button class="btn btn-secondary" onclick="backToMenu()">← Меню</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ТАБЛИЦЯ ЛІДЕРІВ
+════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-leaderboard">
+  <div class="lb-inner">
+    <div class="lb-header">
+      <h2>🏆 Таблиця лідерів</h2>
+      <button class="btn btn-secondary btn-sm" onclick="loadScreen('menu')">← Назад</button>
+    </div>
+    <div id="leaderboard-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ SCRIPTS ═════════════════════════ -->
+<script src="js/config.js"></script>
+<script src="js/locations.js"></script>
+<script src="js/db.js"></script>
+<script src="js/game.js"></script>
+
+</body>
+</html>

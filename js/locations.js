@@ -1,0 +1,100 @@
+// ============================================================
+//  GEODUELER — LOCATIONS (FREE: Wikimedia Commons images)
+// ============================================================
+
+const LOCATIONS = [
+  // EUROPE
+  { lat:48.8584,lng:2.2945,country:"France",city:"Paris",hint:"Знаменита 330-метрова вежа символ Парижу",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg/800px-Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg" },
+  { lat:48.8606,lng:2.3376,country:"France",city:"Paris",hint:"Найбільший художній музей у світі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Louvre_Museum_Wikimedia_Commons.jpg/1200px-Louvre_Museum_Wikimedia_Commons.jpg" },
+  { lat:51.5007,lng:-0.1246,country:"United Kingdom",city:"London",hint:"Знаменита вежа-фортеця біля Темзи",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Tower_of_London_viewed_from_the_River_Thames.jpg/1200px-Tower_of_London_viewed_from_the_River_Thames.jpg" },
+  { lat:51.5081,lng:-0.0759,country:"United Kingdom",city:"London",hint:"Розвідний міст через Темзу",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Tower_bridge_from_southwark.jpg/1200px-Tower_bridge_from_southwark.jpg" },
+  { lat:41.9029,lng:12.4534,country:"Italy",city:"Rome",hint:"Стародавня арена де билися гладіатори",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/1200px-Colosseo_2020.jpg" },
+  { lat:41.8902,lng:12.4922,country:"Italy",city:"Rome",hint:"Знаменитий фонтан у центрі Риму",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Trevi_Fountain%2C_Rome%2C_Italy_2_%28cropped%29.jpg/800px-Trevi_Fountain%2C_Rome%2C_Italy_2_%28cropped%29.jpg" },
+  { lat:45.4341,lng:12.3388,country:"Italy",city:"Venice",hint:"Площа Сан-Марко та канали Венеції",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Piazza_san_marco_2010.jpg/1200px-Piazza_san_marco_2010.jpg" },
+  { lat:43.7229,lng:10.3966,country:"Italy",city:"Pisa",hint:"Знаменита похила вежа в Пізі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Leaning_tower_of_pisa_2.jpg/800px-Leaning_tower_of_pisa_2.jpg" },
+  { lat:41.4036,lng:2.1744,country:"Spain",city:"Barcelona",hint:"Незакінчений собор Гауді в Барселоні",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Sagrada_Familia_01.jpg/800px-Sagrada_Familia_01.jpg" },
+  { lat:37.1765,lng:-3.5878,country:"Spain",city:"Granada",hint:"Мавританський палац Альгамбра в Іспанії",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Alhambra_Nasrid_palaces_patio_de_los_leones.jpg/1200px-Alhambra_Nasrid_palaces_patio_de_los_leones.jpg" },
+  { lat:52.5163,lng:13.3777,country:"Germany",city:"Berlin",hint:"Класичні ворота — символ Берліна",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Brandenburger_Tor_abends.jpg/1200px-Brandenburger_Tor_abends.jpg" },
+  { lat:50.9416,lng:6.9590,country:"Germany",city:"Cologne",hint:"Готичний собор на берегах Рейну",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Cologne_Germany_Cologne-Cathedral-06.jpg/800px-Cologne_Germany_Cologne-Cathedral-06.jpg" },
+  { lat:59.9139,lng:10.7522,country:"Norway",city:"Oslo",hint:"Сучасний оперний театр на воді в Осло",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Oslo_Opera_House_%281%29.jpg/1200px-Oslo_Opera_House_%281%29.jpg" },
+  { lat:55.6761,lng:12.5683,country:"Denmark",city:"Copenhagen",hint:"Кольорові будинки набережної Ніхавн",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Nyhavn_strip.jpg/1200px-Nyhavn_strip.jpg" },
+  { lat:60.1699,lng:24.9384,country:"Finland",city:"Helsinki",hint:"Білий лютеранський собор Гельсінкі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Helsinki_Senate_square_and_Cathedral.jpg/1200px-Helsinki_Senate_square_and_Cathedral.jpg" },
+  { lat:59.3293,lng:18.0686,country:"Sweden",city:"Stockholm",hint:"Барвисті будинки старого міста Стокгольму",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Stortorget_Stockholm_2016.jpg/1200px-Stortorget_Stockholm_2016.jpg" },
+  { lat:47.3769,lng:8.5417,country:"Switzerland",city:"Zurich",hint:"Озеро і гори в Цюріху",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Zurich_City_View.jpg/1200px-Zurich_City_View.jpg" },
+  { lat:48.2082,lng:16.3738,country:"Austria",city:"Vienna",hint:"Розкішний бароковий палац у Відні",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Schoenbrunn_Schloss.jpg/1200px-Schoenbrunn_Schloss.jpg" },
+  { lat:50.0755,lng:14.4378,country:"Czech Republic",city:"Prague",hint:"Середньовічний кам'яний міст у Празі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Karl%C5%AFv_most_p%C5%99es_Vltavu_%2801%29.jpg/1200px-Karl%C5%AFv_most_p%C5%99es_Vltavu_%2801%29.jpg" },
+  { lat:52.2297,lng:21.0122,country:"Poland",city:"Warsaw",hint:"Замкова площа відбудованого Старого міста",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Warsaw_-_Old_Town_Market_Place_-_01.jpg/1200px-Warsaw_-_Old_Town_Market_Place_-_01.jpg" },
+  { lat:50.0647,lng:19.9450,country:"Poland",city:"Krakow",hint:"Замок Вавель над Віслою",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Wawel_from_vistula.jpg/1200px-Wawel_from_vistula.jpg" },
+  { lat:44.4268,lng:26.1025,country:"Romania",city:"Bucharest",hint:"Другий за розміром адмінбудинок у світі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Palace_of_the_Parliament%2C_Bucharest_%28HDR%29.jpg/1200px-Palace_of_the_Parliament%2C_Bucharest_%28HDR%29.jpg" },
+  { lat:37.9838,lng:23.7275,country:"Greece",city:"Athens",hint:"Стародавній храм Парфенон в Афінах",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/1200px-The_Parthenon_in_Athens.jpg" },
+  { lat:38.7169,lng:-9.1399,country:"Portugal",city:"Lisbon",hint:"Старовинний жовтий трамвай Лісабону",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Electrico_Lisboa.jpg/1200px-Electrico_Lisboa.jpg" },
+  { lat:52.3676,lng:4.9041,country:"Netherlands",city:"Amsterdam",hint:"Канали і вузькі будинки Амстердаму",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Amsterdam_canal_district.jpg/1200px-Amsterdam_canal_district.jpg" },
+  { lat:50.8503,lng:4.3517,country:"Belgium",city:"Brussels",hint:"Гранд-Плас з готичною ратушею",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Grand_place_Bruxelles-small.jpg/1200px-Grand_place_Bruxelles-small.jpg" },
+  { lat:55.7558,lng:37.6176,country:"Russia",city:"Moscow",hint:"Червона площа з кольоровими соборами",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Red_Square%2C_Moscow.jpg/1200px-Red_Square%2C_Moscow.jpg" },
+  { lat:59.9311,lng:30.3609,country:"Russia",city:"St. Petersburg",hint:"Барвистий собор Спас на Крові",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Church_of_the_Savior_on_Spilled_Blood_SPB.jpg/800px-Church_of_the_Savior_on_Spilled_Blood_SPB.jpg" },
+  { lat:50.4501,lng:30.5234,country:"Ukraine",city:"Kyiv",hint:"Золоті куполи Києво-Печерської лаври",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Kyiv_Pechersk_Lavra_01_2019.jpg/1200px-Kyiv_Pechersk_Lavra_01_2019.jpg" },
+  { lat:49.8397,lng:24.0297,country:"Ukraine",city:"Lviv",hint:"Ринкова площа та ратуша Львова",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Lviv_Market_Square_16.jpg/1200px-Lviv_Market_Square_16.jpg" },
+  { lat:64.1265,lng:-21.8174,country:"Iceland",city:"Reykjavik",hint:"Полярне сяйво над ісландським пейзажем",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Iceland_NorthernLights.jpg/1200px-Iceland_NorthernLights.jpg" },
+  // NORTH AMERICA
+  { lat:40.6892,lng:-74.0445,country:"USA",city:"New York",hint:"Символ свободи у нью-йоркській гавані",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Statue_of_Liberty_7.jpg/800px-Statue_of_Liberty_7.jpg" },
+  { lat:40.7580,lng:-73.9855,country:"USA",city:"New York",hint:"Найяскравіша площа світу — Таймс-сквер",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/New_york_times_square-terabass.jpg/800px-New_york_times_square-terabass.jpg" },
+  { lat:34.0522,lng:-118.2437,country:"USA",city:"Los Angeles",hint:"Знак кіноіндустрії на голлівудських пагорбах",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Hollywoodsign.jpg/1200px-Hollywoodsign.jpg" },
+  { lat:37.8199,lng:-122.4783,country:"USA",city:"San Francisco",hint:"Підвісний міст «Золоті ворота»",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/GoldenGateBridge-001.jpg/1200px-GoldenGateBridge-001.jpg" },
+  { lat:38.8895,lng:-77.0353,country:"USA",city:"Washington D.C.",hint:"Купол американського Капітолію",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/View_of_United_States_Capitol_Building_from_West.jpg/1200px-View_of_United_States_Capitol_Building_from_West.jpg" },
+  { lat:36.1699,lng:-115.1398,country:"USA",city:"Las Vegas",hint:"Казино-місто в пустелі Невади",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Las_Vegas_Strip.jpg/800px-Las_Vegas_Strip.jpg" },
+  { lat:29.9511,lng:-90.0715,country:"USA",city:"New Orleans",hint:"Кольоровий французький квартал",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/French_Quarter_New_Orleans_Jan_2006.jpg/1200px-French_Quarter_New_Orleans_Jan_2006.jpg" },
+  { lat:36.0544,lng:-112.1401,country:"USA",city:"Grand Canyon",hint:"Великий каньйон — природне диво Америки",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/USA_09847_Grand_Canyon_Luca_Galuzzi_2007.jpg/1200px-USA_09847_Grand_Canyon_Luca_Galuzzi_2007.jpg" },
+  { lat:43.6532,lng:-79.3832,country:"Canada",city:"Toronto",hint:"CN Tower — найвища вільностояча споруда",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Toronto_-_ON_-_Toronto_Harbourfront8.jpg/800px-Toronto_-_ON_-_Toronto_Harbourfront8.jpg" },
+  { lat:49.2827,lng:-123.1207,country:"Canada",city:"Vancouver",hint:"Мальовнича гавань Ванкувера",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Vancouver_British_Columbia_Canada_-_panoramio.jpg/1200px-Vancouver_British_Columbia_Canada_-_panoramio.jpg" },
+  { lat:19.4326,lng:-99.1332,country:"Mexico",city:"Mexico City",hint:"Головна соборна площа столиці Мексики",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Zocalo_Mexico_City.jpg/1200px-Zocalo_Mexico_City.jpg" },
+  { lat:20.6843,lng:-88.5678,country:"Mexico",city:"Chichen Itza",hint:"Піраміда давньої цивілізації майя",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Chichen_Itza_3.jpg/1200px-Chichen_Itza_3.jpg" },
+  // SOUTH AMERICA
+  { lat:-22.9517,lng:-43.2105,country:"Brazil",city:"Rio de Janeiro",hint:"Статуя Христа на горі Корковаду",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Cristoredentor.jpg/800px-Cristoredentor.jpg" },
+  { lat:-13.1631,lng:-72.5450,country:"Peru",city:"Machu Picchu",hint:"Загублене місто інків у горах Перу",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Machu_Picchu%2C_Peru.jpg/1200px-Machu_Picchu%2C_Peru.jpg" },
+  { lat:-25.6953,lng:-54.4367,country:"Argentina/Brazil",city:"Iguazu Falls",hint:"Найбільші водоспади у світі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Iguaz%C3%BA_falls_viewed_from_Brazil_-_banner_format.jpg/1200px-Iguaz%C3%BA_falls_viewed_from_Brazil_-_banner_format.jpg" },
+  { lat:-34.6037,lng:-58.3816,country:"Argentina",city:"Buenos Aires",hint:"Кольоровий район Ла-Бока у Буенос-Айресі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Buenos_Aires_%28AU%29%2C_Caminito.jpg/1200px-Buenos_Aires_%28AU%29%2C_Caminito.jpg" },
+  { lat:-0.2299,lng:-78.5249,country:"Ecuador",city:"Quito",hint:"Готична базиліка столиці Еквадору",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Quito_Basilica_01.jpg/800px-Quito_Basilica_01.jpg" },
+  // ASIA
+  { lat:35.6586,lng:139.7454,country:"Japan",city:"Tokyo",hint:"Хмарочоси та вежа Токіо вночі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg/800px-Skyscrapers_of_Shinjuku_2009_January.jpg" },
+  { lat:34.6937,lng:135.5023,country:"Japan",city:"Osaka",hint:"Величний замок 16-го ст в Осаці",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Osaka_Castle_in_november_%28cropped%29.jpg/800px-Osaka_Castle_in_november_%28cropped%29.jpg" },
+  { lat:35.0116,lng:135.7681,country:"Japan",city:"Kyoto",hint:"Тисячі червоних воріт тории в Кіото",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Fushimi_Inari-taisha_Shrine_%281%29.jpg/800px-Fushimi_Inari-taisha_Shrine_%281%29.jpg" },
+  { lat:34.6901,lng:135.5037,country:"Japan",city:"Osaka",hint:"Квартал Дотонбурі з великими вивісками",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Dotonbori_Glico_sign.jpg/800px-Dotonbori_Glico_sign.jpg" },
+  { lat:37.5665,lng:126.9780,country:"South Korea",city:"Seoul",hint:"Вежа N на пагорбі Намсан у Сеулі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/N_Seoul_Tower_from_Naksan_Park.jpg/800px-N_Seoul_Tower_from_Naksan_Park.jpg" },
+  { lat:22.3193,lng:114.1694,country:"Hong Kong",city:"Hong Kong",hint:"Найвища концентрація хмарочосів у світі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Hong_Kong_night_skyline.jpg/1200px-Hong_Kong_night_skyline.jpg" },
+  { lat:1.2839,lng:103.8607,country:"Singapore",city:"Singapore",hint:"Марина Бей Сендс з нескінченним басейном",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Singapore_Panorama_v2.jpg/1200px-Singapore_Panorama_v2.jpg" },
+  { lat:13.7461,lng:100.4929,country:"Thailand",city:"Bangkok",hint:"Буддійський храм Ват Арун на березі Менам",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Wat_Arun_Ratchawararam.jpg/800px-Wat_Arun_Ratchawararam.jpg" },
+  { lat:21.0285,lng:105.8542,country:"Vietnam",city:"Hanoi",hint:"Старий квартал зі звуженими будинками в Ханої",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Hanoi_Old_Quarter.jpg/1200px-Hanoi_Old_Quarter.jpg" },
+  { lat:28.6139,lng:77.2090,country:"India",city:"New Delhi",hint:"Тріумфальна арка-меморіал у Делі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/India_gate_at_night.jpg/1200px-India_gate_at_night.jpg" },
+  { lat:27.1751,lng:78.0421,country:"India",city:"Agra",hint:"Мавзолей кохання — Тадж-Махал",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1200px-Taj_Mahal_%28Edited%29.jpeg" },
+  { lat:19.0760,lng:72.8777,country:"India",city:"Mumbai",hint:"Ворота Індії на березі Аравійського моря",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Mumbai_03-2016_30_Gateway_of_India.jpg/1200px-Mumbai_03-2016_30_Gateway_of_India.jpg" },
+  { lat:25.2048,lng:55.2708,country:"UAE",city:"Dubai",hint:"Бурдж-Халіфа — найвища споруда світу 828м",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Burj_Khalifa_building.jpg/800px-Burj_Khalifa_building.jpg" },
+  { lat:31.7683,lng:35.2137,country:"Israel",city:"Jerusalem",hint:"Золотий купол Скелі в стародавньому Єрусалимі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Temple_Mount_from_Mount_of_Olives_2011-2.jpg/1200px-Temple_Mount_from_Mount_of_Olives_2011-2.jpg" },
+  { lat:41.0082,lng:28.9784,country:"Turkey",city:"Istanbul",hint:"Собор Св. Софії — 1500 років на перетині цивілізацій",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Hagia_Sofia_front_view.jpg/1200px-Hagia_Sofia_front_view.jpg" },
+  { lat:39.9042,lng:116.4074,country:"China",city:"Beijing",hint:"Ворота Тяньаньмень у Забороненому місті",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Forbidden_City_Beijing_Shenwumen_Gate.jpg/1200px-Forbidden_City_Beijing_Shenwumen_Gate.jpg" },
+  { lat:31.2304,lng:121.4737,country:"China",city:"Shanghai",hint:"Набережна Бунд з колоніальними будівлями",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Shanghai_Bund_1.jpg/1200px-Shanghai_Bund_1.jpg" },
+  { lat:27.7172,lng:85.3240,country:"Nepal",city:"Kathmandu",hint:"Священна ступа Боднатх у Катманду",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Boudhanath_stupa.jpg/800px-Boudhanath_stupa.jpg" },
+  { lat:35.6892,lng:51.3890,country:"Iran",city:"Tehran",hint:"Вежа Азаді — символ Тегерана",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Azadi_Tower_Tehran.jpg/1200px-Azadi_Tower_Tehran.jpg" },
+  // OCEANIA
+  { lat:-33.8568,lng:151.2153,country:"Australia",city:"Sydney",hint:"Легендарний оперний театр в Сіднеї",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Sydney_Australia._%2810%29.jpg/1200px-Sydney_Australia._%2810%29.jpg" },
+  { lat:-37.8136,lng:144.9631,country:"Australia",city:"Melbourne",hint:"Жвавий центр другого міста Австралії",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Melbourne_viewed_from_Rialto.jpg/1200px-Melbourne_viewed_from_Rialto.jpg" },
+  { lat:-36.8485,lng:174.7633,country:"New Zealand",city:"Auckland",hint:"Скайтауер у найбільшому місті НЗ",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Auckland_From_Harbour_Bridge.jpg/1200px-Auckland_From_Harbour_Bridge.jpg" },
+  // AFRICA
+  { lat:29.9792,lng:31.1342,country:"Egypt",city:"Giza",hint:"Єдине чудо стародавнього світу що збереглось",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/1200px-Kheops-Pyramid.jpg" },
+  { lat:30.0444,lng:31.2357,country:"Egypt",city:"Cairo",hint:"Мечеть Мухаммеда Алі на фортеці Саладіна",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Mosque_of_muhammad_ali.jpg/1200px-Mosque_of_muhammad_ali.jpg" },
+  { lat:-33.9249,lng:18.4241,country:"South Africa",city:"Cape Town",hint:"Плоска Столова гора над Кейптауном",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Table_Mountain_DanieVDM.jpg/1200px-Table_Mountain_DanieVDM.jpg" },
+  { lat:-26.2041,lng:28.0473,country:"South Africa",city:"Johannesburg",hint:"Горизонт найбільшого міста ПАР",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Johannesburg_CBD_from_top_of_Carlton_Centre.jpg/1200px-Johannesburg_CBD_from_top_of_Carlton_Centre.jpg" },
+  { lat:14.6937,lng:-17.4441,country:"Senegal",city:"Dakar",hint:"49-метрова бронзова статуя в Дакарі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/African_Renaissance_Monument%2C_2013.jpg/800px-African_Renaissance_Monument%2C_2013.jpg" },
+  // WONDERS
+  { lat:-8.4095,lng:115.1889,country:"Indonesia",city:"Bali",hint:"Зелені рисові тераси острова Балі",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rice_fields_in_Bali.jpg/1200px-Rice_fields_in_Bali.jpg" },
+  { lat:27.9881,lng:86.9250,country:"Nepal",city:"Himalaya",hint:"Найвища точка планети — Еверест 8849м",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg/1200px-Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg" },
+  { lat:-3.0674,lng:37.3556,country:"Tanzania",city:"Kilimanjaro",hint:"Найвища гора Африки зі снігом на вершині",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Kilimanjaro_2012.jpg/1200px-Kilimanjaro_2012.jpg" },
+  { lat:45.9163,lng:7.6583,country:"Switzerland/Italy",city:"Matterhorn",hint:"Гострий пік Маттерхорн у Альпах",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Matterhorn_from_Domh%C3%BCtte_-_August_2014.jpg/800px-Matterhorn_from_Domh%C3%BCtte_-_August_2014.jpg" },
+  { lat:63.4600,lng:-19.0208,country:"Iceland",city:"South Iceland",hint:"Водоспад Скоугафос перед льодовиком",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Skogafoss_2.jpg/1200px-Skogafoss_2.jpg" },
+];
+
+function getRandomLocation() {
+  return LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+}
+function getRandomLocations(count) {
+  return [...LOCATIONS].sort(() => Math.random() - 0.5).slice(0, Math.min(count, LOCATIONS.length));
+}
